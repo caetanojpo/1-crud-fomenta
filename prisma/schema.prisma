@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Participante{
+  id Int @id @default(autoincrement())
+  formulario FormularioReuniaotoParticipante[]
+  nome String
+  email String
+  cargo String
+  createdAt DateTime @default(now())
+}
+
+model Categorias{
+  id Int @id @default(autoincrement())
+  descricao String
+  formulario FormularioReuniao[]
+  createdAt DateTime @default(now())
+}
+
+model FormularioReuniao {
+  id Int @id @default(autoincrement())
+  visita String
+  participante FormularioReuniaotoParticipante[]
+  data DateTime
+  local String
+  categoria Categorias @relation(fields: [categoriaId], references: [id])
+  categoriaId Int
+  duracao String
+  assunto String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model FormularioReuniaotoParticipante {
+  formularioReuniao   FormularioReuniao @relation(fields: [formularioReuniaoId], references: [id])
+  formularioReuniaoId Int
+  participante        Participante @relation(fields: [participanteId], references: [id])
+  participanteId      Int
+  @@id([formularioReuniaoId, participanteId])
+}
+
+model Planos{
+  id Int @id @default(autoincrement())
+  descricao String
+  formulario FormularioCoworking[]
+  createdAt DateTime @default(now())
+   updatedAt DateTime @default(now())
+}
+
+model FormularioCoworking {
+  id Int @id @default(autoincrement())
+  nome String
+  telefone String
+  organizacao String
+  data DateTime
+  plano Planos @relation(fields: [planoId], references: [id])
+  planoId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
