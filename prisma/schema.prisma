@@ -41,11 +41,11 @@ model FormularioReuniao {
 }
 
 model FormularioReuniaotoParticipante {
+  formularioReuniaotoParticipanteId Int @id @default(autoincrement())
   formularioReuniao   FormularioReuniao @relation(fields: [formularioReuniaoId], references: [id])
   formularioReuniaoId Int
   participante        Participante @relation(fields: [participanteId], references: [id])
   participanteId      Int
-  @@id([formularioReuniaoId, participanteId])
 }
 
 model Planos{

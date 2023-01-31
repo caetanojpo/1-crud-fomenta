@@ -38,25 +38,24 @@ export const criarFormularioReuniao = async (req, res) => {
         participanteId,
     } = req.body
     try {
-        const reuniaoCriada = await prisma.formularioReuniao.create( {
+        const reuniaoCriada = await prisma.formularioReuniao.create({
             data: {
-                visita,
-                data,
-                local,
-                categoriaId,
-                duracao,
-                assunto
-            }
-        })
-        participanteId.map(async (id) => {
-          await prisma.FormularioReuniaotoParticipante.create({
-            data: {
-              formularioReuniaoId: reuniaoCriada.id,
-              participanteId:id,
-            }
+              visita,
+              data,
+              local,
+              duracao,
+              assunto,
+              categoriaId,
+              participante : [ {
+                connect: {
+                    id: participanteId.id
+                }
+
+              }]
+
+            },
           })
-        })
-        res.status(200).json(reuniaoCriada)
+          res.status(200).json(reuniaoCriada);
     }
     catch (error) {
         res.status(400).send({message: `${error.message} - Não foi possível criar o formulário`})
@@ -70,24 +69,12 @@ export const atualizarFormularioReuniao = async (req, res) => {
         local,
         categoria,
         duracao,
-        assunto
+        assunto,
+        participanteId,
     } = req.body
     try{
-        const reuniaoAtualizada = await prisma.formularioReuniao.update({
-            where: {
-                id: parseInt(req.params.id)
-            },
-            data: {
-                visita,
-                data,
-                local,
-                categoria,
-                duracao,
-                assunto
-            }
-        })
+        
 
-        res.status(200).json(reuniaoAtualizada)
     }
     catch (error) {
         res.status(400).send({message: `${error.message} - Não foi possível criar o formulário`})
